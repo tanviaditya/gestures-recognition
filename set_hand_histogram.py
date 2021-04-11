@@ -1,5 +1,7 @@
 # Python version 3.6.8
-
+# Keras version 2.4.3
+# Tensorflow version 2.4.1
+# OpenCV version 4.5.1
 import cv2
 import numpy as np
 import pickle
@@ -15,7 +17,6 @@ def build_squares(img):
 				imgCrop = img[y:y+h, x:x+w]
 			else:
 				imgCrop = np.hstack((imgCrop, img[y:y+h, x:x+w]))
-			#print(imgCrop.shape)
 			cv2.rectangle(img, (x,y), (x+w, y+h), (0,255,0), 1)
 			x+=w+d
 		if np.any(crop == None):

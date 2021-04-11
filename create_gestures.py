@@ -1,3 +1,9 @@
+# Python version 3.6.8
+# Keras version 2.4.3
+# Tensorflow version 2.4.1
+# OpenCV version 4.5.1
+# sklearn version 0.24.1
+
 import cv2
 import numpy as np
 import pickle,os,sqlite3,random

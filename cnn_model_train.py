@@ -1,3 +1,9 @@
+# Python version 3.6.8
+# Keras version 2.4.3
+# Tensorflow version 2.4.1
+# OpenCV version 4.5.1
+# sklearn version 0.24.1
+
 import numpy as np
 import pickle
 import cv2, os
@@ -12,6 +18,7 @@ from keras.layers.convolutional import MaxPooling2D
 from keras.utils import np_utils
 from keras.callbacks import ModelCheckpoint
 from keras import backend as K
+
 
 K.set_image_data_format('channels_last')
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
