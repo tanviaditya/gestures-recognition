@@ -1,3 +1,5 @@
+# Python version 3.6.8
+
 import cv2
 import numpy as np
 import pickle

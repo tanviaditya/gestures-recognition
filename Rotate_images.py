@@ -1,3 +1,7 @@
+# Python version 3.6.8
+# Keras version 2.4.3
+# Tensorflow version 2.4.1
+# OpenCV version 4.5.1
 import cv2, os
 
 def flip_images():
