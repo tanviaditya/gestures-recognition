@@ -10,7 +10,7 @@ def flip_images():
 	images = []
 	labels = []
 	for g_id in os.listdir(gest_folder):
-		for i in range(10):
+		for i in range(600):
 			path = gest_folder+"/"+g_id+"/"+str(i+1)+".jpg"
 			new_path = gest_folder+"/"+g_id+"/"+str(i+1+10)+".jpg"
 #			print(path)

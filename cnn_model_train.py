@@ -3,6 +3,7 @@
 # Tensorflow version 2.4.1
 # OpenCV version 4.5.1
 # sklearn version 0.24.1
+# Numpy version 1.19.5
 
 import numpy as np
 import pickle
@@ -27,11 +28,13 @@ def get_image_size():
 	img = cv2.imread('gestures/1/10.jpg', 0)
 	return img.shape
 
+# Get the number of classes
 def get_num_of_classes():
 	return len(glob('gestures/*'))
 
 image_x,image_y=get_image_size()
 
+# defining the CNN model
 def cnn_model():
 	num_of_classes = get_num_of_classes()
 	model = Sequential()
@@ -53,6 +56,7 @@ def cnn_model():
 
 	return model, callbacks_list
 
+#Training the model on 25 epochs
 def train():
 	with open("train_images", "rb") as f:
 		train_images = np.array(pickle.load(f))
@@ -85,6 +89,7 @@ def train():
 	model.fit(train_images,train_labels,validation_data=(val_images,val_labels),epochs=25,batch_size=32,callbacks=callbacks_list)
 	scores = model.evaluate(val_images, val_labels, verbose=0)
 	print("CNN Error: %.2f%%" % (100-scores[1]*100))
+	# Saving the model
 	model.save('cnn_model_keras2_new3.h5')
 
 

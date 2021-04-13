@@ -3,6 +3,7 @@
 # Tensorflow version 2.4.1
 # OpenCV version 4.5.1
 # sklearn version 0.24.1
+# Numpy version 1.19.5
 
 import cv2
 import numpy as np
@@ -10,6 +11,7 @@ import pickle,os,sqlite3,random
 
 image_x,image_y=50,50
 
+#Retrieve the stored histogram.
 def get_hand_hist():
 	with open("hist","rb") as f:
 		hist=pickle.load(f)
@@ -79,6 +81,8 @@ def store_images(g_id):
 		thresh=thresh[y:y+h,x:x+w]
 
 		#https://stackoverflow.com/questions/55854810/opencv-version-4-1-0-drawcontours
+		#Find the contours, i.e., image edges.
+		#These correspond to the edges of our hand,.
 		everything=cv2.findContours(thresh.copy(),cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
 		contours=everything[0] if len(everything)==2 else everything[1]
 
@@ -94,7 +98,7 @@ def store_images(g_id):
 				elif h1>w1:
 					save_img=cv2.copyMakeBorder(save_img,0,0,int((h1-w1)/2),int((h1-w1)/2),cv2.BORDER_CONSTANT,(0,0,0))
 				save_img=cv2.resize(save_img,(image_x,image_y))
-				#Do something with 50% probability
+				#Flip image with 50% probability
 				if random.randint(0,10)%2==0:
 					save_img=cv2.flip(save_img,1)
 				cv2.putText(img,"Capturing...",(30,60),cv2.FONT_HERSHEY_TRIPLEX,2,(127,255,255))

@@ -3,7 +3,7 @@
 # Tensorflow version 2.4.1
 # OpenCV version 4.5.1
 # sklearn version 0.24.1
-
+# Twilio version 6.55.0
 
 import cv2, pickle
 import numpy as np
@@ -11,26 +11,27 @@ import tensorflow as tf
 import smtplib 
 import os
 import sqlite3
-import pyttsx3
 from keras.models import load_model
 from threading import Thread
 from twilio.rest import Client
-engine = pyttsx3.init()
-engine.setProperty('rate', 150)
+
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 model = load_model('cnn_model_keras2_new3.h5')
 
+# Get saved hand histogram
 def get_hand_hist():
 	with open("hist", "rb") as f:
 		hist = pickle.load(f)
 	return hist
 
+#  Get image size
 def get_image_size():
 	img = cv2.imread('gestures/0/10.jpg', 0)
 	return img.shape
 
 image_x, image_y = get_image_size()
 
+# image preprocessing
 def keras_process_image(img):
 	img = cv2.resize(img, (image_x, image_y))
 	img = np.array(img, dtype=np.float32)
@@ -68,7 +69,6 @@ def get_pred_from_contour(contour, thresh):
 
 hist = get_hand_hist()
 x, y, w, h = 300, 100, 300, 300
-# is_voice_on = True
 
 def get_img_contour_thresh(img):
 	img = cv2.flip(img, 1)
@@ -85,14 +85,8 @@ def get_img_contour_thresh(img):
 	contours = cv2.findContours(thresh.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)[0]
 	return img, contours, thresh
 
-# def say_text(text):
-# 	if not is_voice_on:
-# 		return
-# 	while engine._inLoop:
-# 		pass
-# 	engine.say(text)
-# 	engine.runAndWait()
 
+# function to send SMS
 def sendSms():
 	number1='sender number'
 	number2='reciever number'
@@ -110,6 +104,7 @@ def sendSms():
 
 	print(message.sid)
 
+#function to send Email
 def sendEmail():
 	server = smtplib.SMTP_SSL('smtp.gmail.com', 465) 
 	server.ehlo() 
@@ -122,7 +117,6 @@ def sendEmail():
 	server.sendmail(email,[semail], message) 
 
 def text_mode(cam):
-	# global is_voice_on
 	text = ""
 	word = ""
 	count_same_frame = 0
@@ -132,9 +126,12 @@ def text_mode(cam):
 		img = cv2.resize(img, (640, 480))
 		img, contours, thresh = get_img_contour_thresh(img)
 		old_text = text
+		#Sort by area of contour.
 		if len(contours) > 0:
 			contour = max(contours, key = cv2.contourArea)
+			#A large area means that an gesture was made.
 			if cv2.contourArea(contour) > 10000:
+				#Prediction
 				text = get_pred_from_contour(contour, thresh)
 				# print("Prediction ", text)
 				if old_text == text:
@@ -166,6 +163,7 @@ def text_mode(cam):
 				print('yolo1')
 			text = ""
 			word = ""
+		# Blackboard to display the text predicted from gestures
 		blackboard = np.zeros((480, 640, 3), dtype=np.uint8)
 		cv2.putText(blackboard, " ", (180, 50), cv2.FONT_HERSHEY_TRIPLEX, 1.5, (255, 0,0))
 		cv2.putText(blackboard, "Prediction - " + text, (30, 100), cv2.FONT_HERSHEY_TRIPLEX, 1, (255, 255, 0))
@@ -179,9 +177,7 @@ def text_mode(cam):
 		if keypress == ord('q'):
 			# break
 			return
-		if keypress == ord('h'):
-			sendSms()
-			sendEmail()
+
 
 
 def recognize():
