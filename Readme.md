@@ -1,3 +1,5 @@
+**SIGN LANGUAGE RECOGNITION**
+
 Step 1)
 Creating the image histogram:
 	Run set_hand_histogram.py.
